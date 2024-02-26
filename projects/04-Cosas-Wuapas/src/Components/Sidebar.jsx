@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-
+//importamos los iconos que vamos a utilizar
 import menuIcon from '../assets/Menu.svg';
 import downArrow from '../assets/down-arrow.svg'
 import homeIcon from '../assets/Home.svg';
@@ -8,8 +8,13 @@ import create from '../assets/Create.svg';
 import account from '../assets/Account.svg';
 import product from '../assets/Product.svg';
 import favorite from '../assets/Favorite.svg';
+//importamos el css
 import "./Sidebar.css";
 
+//creamos un array de objetos con las opciones del menú donde:
+//name es el nombre de la opción
+//icon es el icono que se muestra junto al nombre
+//items es un array con las subopciones de cada opción
 const menuItems = [
   {
     name: "Home",
@@ -37,10 +42,12 @@ const menuItems = [
   {
     name: "Favourites",
     icon: favorite,
+    items: ["Photos", "Videos", "Files"],
   },
 ];
 
 const Icon = ({ icon }) => (
+    //creamos un componente Icon que recibe un icono/imagen/url y lo muestra
     <img src={icon} className="material-symbols-outlined" alt="icon"/>
 );
 
@@ -99,6 +106,7 @@ const SubMenu = ({ item, activeItem, handleClick }) => {
   );
 };
 
+//importamos el Sidebar para utilizarlo en el App.jsx
 export const Sidebar = () => {
   const [activeItem, setActiveItem] = useState("");
 
