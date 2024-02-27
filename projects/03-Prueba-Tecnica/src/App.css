@@ -8,12 +8,13 @@ main{
 }
 
 section{
-    display: flex;
+    display: contents;
     justify-content: space-between;
     align-items: center;
     gap: 2em;
 }
+
 img{
-    max-width: 320px;
-    height: auto;
+    margin-bottom: 10px;
 }
+
