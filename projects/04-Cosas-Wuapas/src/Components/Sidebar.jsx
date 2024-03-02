@@ -1,4 +1,5 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import {isMobileDevice} from 'react-device-detect';
 //importamos los iconos que vamos a utilizar
 import menuIcon from '../assets/Menu.svg';
 import downArrow from '../assets/down-arrow.svg'
@@ -106,31 +107,60 @@ const SubMenu = ({ item, activeItem, handleClick }) => {
   );
 };
 
-//importamos el Sidebar para utilizarlo en el App.jsx
+
+//exportamos el Sidebar para utilizarlo en el App.jsx
 export const Sidebar = () => {
   const [activeItem, setActiveItem] = useState("");
+  // Estado para identificar si el dispositivo es móvil
+  const [isMobileDevice, setIsMobileDevice] = useState(window.innerWidth < 768);
+
+// Efecto para escuchar cambios en el tamaño de la ventana
+useEffect(() => {
+  const handleResize = () => {
+    setIsMobileDevice(window.innerWidth <= 768);
+  };
+
+  // Agregar listener al cambiar tamaño de la ventana
+  window.addEventListener('resize', handleResize);
+
+  // Limpiar listener
+  return () => window.removeEventListener('resize', handleResize);
+}, []);
+
 
   const handleClick = (item) => {
     console.log("activeItem", activeItem);
     setActiveItem(item !== activeItem ? item : "");
   };
-
+  
   return (
-    <aside className="sidebar">
+    <div className="sidebar">
       <NavHeader />
       {menuItems.map((item) => (
         <div key={item.name}>
           {!item.items && (
-            <NavButton
-              onClick={handleClick}
-              name={item.name}
-              icon={item.icon}
-              isActive={activeItem === item.name}
-              hasSubNav={!!item.items}
-            />
+            // Condicional basado en el tamaño de la pantalla
+            isMobileDevice ? (
+              <NavButton
+                onClick={handleClick}
+                icon={item.icon}
+                isActive={activeItem === item.name}
+                hasSubNav={!!item.items} 
+              />
+            ) : (
+              <NavButton
+                onClick={handleClick}
+                icon={item.icon}
+                name={item.name}
+                isActive={activeItem === item.name}
+                hasSubNav={!!item.items}
+              />
+            )
           )}
           {item.items && (
-            <>
+            isMobileDevice ? (
+               // Condicional basado en el tamaño de la pantalla
+              <>
               <NavButton
                 onClick={handleClick}
                 name={item.name}
@@ -143,10 +173,26 @@ export const Sidebar = () => {
                 handleClick={handleClick}
                 item={item}
               />
-            </>
+              </>
+            ) : (
+              <>
+              <NavButton
+                onClick={handleClick}
+                name={item.name}
+                icon={item.icon}
+                isActive={activeItem === item.name}
+                hasSubNav={!!item.items}
+              />
+              <SubMenu
+                activeItem={activeItem}
+                handleClick={handleClick}
+                item={item}
+              />
+              </>
+            )
           )}
         </div>
       ))}
-    </aside>
+    </div>
   );
 };
